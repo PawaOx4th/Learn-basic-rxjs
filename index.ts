@@ -6,6 +6,8 @@ interface Observer {
   complete: () => void;
 }
 
+type Teardown = () => void;
+
 const observer: Observer = {
   next: (value: any) => console.log('next :', value),
   error: (err: any) => console.error('error :', err),
@@ -20,7 +22,7 @@ class Observable {
   subscribe(observer: Observer) {
     let i = 0;
     const index = setInterval(() => observer.next(i++), 1000);
-    const teardown = () => clearInterval(index);
+    const teardown:Teardown = () => clearInterval(index);
     return {
       unsubscibe: () => teardown(),
     };
