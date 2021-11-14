@@ -13,3 +13,7 @@ const observer: Observer = {
 observer.next('Hey Pawa.');
 observer.error('Eror'); 
 observer.complete();
+
+/**
+ * Observable
+ */
