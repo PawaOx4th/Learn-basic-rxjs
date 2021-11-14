@@ -1,3 +1,5 @@
+console.clear();
+
 interface Observer {
   next: (value: any) => void;
   error: (value: any) => void;
@@ -19,7 +21,12 @@ const observer: Observer = {
  */
 function source(observer: Observer) {
   let i = 0;
-  setInterval(() => observer.next(i++), 1000);
+  const index = setInterval(() => observer.next(i++), 1000);
+  const teardown = () => clearInterval(index);
+  return {
+    unsubscibe: () => teardown(),
+  };
 }
 
-source(observer);
+const subscription = source(observer);
+setTimeout(() => subscription.unsubscibe(), 5000);
