@@ -16,17 +16,28 @@ const observer: Observer = {
 // observer.error('Eror');
 // observer.complete();
 
+class Observable {
+  subscribe(observer: Observer) {
+    let i = 0;
+    const index = setInterval(() => observer.next(i++), 1000);
+    const teardown = () => clearInterval(index);
+    return {
+      unsubscibe: () => teardown(),
+    };
+  }
+}
+
 /**
  * Observable
  */
-function source(observer: Observer) {
-  let i = 0;
-  const index = setInterval(() => observer.next(i++), 1000);
-  const teardown = () => clearInterval(index);
-  return {
-    unsubscibe: () => teardown(),
-  };
-}
-
-const subscription = source(observer);
+// function source(observer: Observer) {
+//   let i = 0;
+//   const index = setInterval(() => observer.next(i++), 1000);
+//   const teardown = () => clearInterval(index);
+//   return {
+//     unsubscibe: () => teardown(),
+//   };
+// }
+const source = new Observable();
+const subscription = source.subscribe(observer);
 setTimeout(() => subscription.unsubscibe(), 5000);
