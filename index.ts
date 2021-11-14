@@ -51,12 +51,37 @@ function interval(milliseconds: number) {
   });
 }
 
+function of(...datalist: any[]) {
+  return new Observable((observer) => {
+    datalist.forEach((data) => observer.next(data));
+    observer.complete();
+    return () => {};
+  });
+}
+
+function from(datalist: any[]) {
+  return new Observable((observer) => {
+    datalist.forEach((data) => observer.next(data));
+    observer.complete();
+    return () => {};
+  });
+}
+
 // const source = new Observable((observer) => {
 //   let i = 0;
 //   const index = setInterval(() => observer.next(i++), 1000);
 //   const teardown = () => clearInterval(index);
 //   return teardown;
 // });
-const source = interval(2000);
+
+// 1.
+// const source = interval(2000);
+
+// 2.
+// const source = of(10, 20, 30);
+
+// 3.
+const source = from([1, 2, 3, 4, 5, 6]);
+
 const subscription = source.subscribe(observer);
 setTimeout(() => subscription.unsubscibe(), 6000);
