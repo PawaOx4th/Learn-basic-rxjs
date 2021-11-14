@@ -19,10 +19,12 @@ const observer: Observer = {
 // observer.complete();
 
 class Observable {
+  subscriber: (observer: Observer) => Teardown;
+  constructor(subscriber: (observer: Observer) => Teardown) {
+    this.subscriber = subscriber;
+  }
   subscribe(observer: Observer) {
-    let i = 0;
-    const index = setInterval(() => observer.next(i++), 1000);
-    const teardown:Teardown = () => clearInterval(index);
+    const teardown: Teardown = this.subscriber(observer);
     return {
       unsubscibe: () => teardown(),
     };
@@ -40,6 +42,21 @@ class Observable {
 //     unsubscibe: () => teardown(),
 //   };
 // }
-const source = new Observable();
+function interval(milliseconds: number) {
+  return new Observable((observer) => {
+    let i = 0;
+    const index = setInterval(() => observer.next(i++), milliseconds);
+    const teardown = () => clearInterval(index);
+    return teardown;
+  });
+}
+
+// const source = new Observable((observer) => {
+//   let i = 0;
+//   const index = setInterval(() => observer.next(i++), 1000);
+//   const teardown = () => clearInterval(index);
+//   return teardown;
+// });
+const source = interval(2000);
 const subscription = source.subscribe(observer);
-setTimeout(() => subscription.unsubscibe(), 5000);
+setTimeout(() => subscription.unsubscibe(), 6000);
